@@ -1,7 +1,7 @@
 CXX = g++
 CXXFLAGS = -Isrc/include -std=c++17 -g
 
-SOURCES = main.cpp src/view.cpp  
+SOURCES = main.cpp src/view.cpp src/algorithm.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
 
 TARGET = main

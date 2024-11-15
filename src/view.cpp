@@ -1,5 +1,6 @@
 #include "view.h"
 
+
 view::view():
 window(sf::VideoMode(width, height), "SFML works!"),
 height(800),
@@ -24,8 +25,12 @@ void view::showWindow(){
             if(event.type == sf::Event::MouseMoved || event.type == sf::Event::MouseButtonPressed){
                 handleMouseEvent();
             }
+            if (event.type == sf::Event::KeyPressed) {
+                if (event.key.code == sf::Keyboard::B) {    
+                    algo.bfs(grid, {6, 7}, {20, 30});
+                }
+            }
         }
-
         window.clear(sf::Color::White);
         drawGrid();
         window.display();
