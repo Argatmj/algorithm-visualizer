@@ -18,15 +18,18 @@ std::set<std::pair<int,int>> algorithm::neighbors(std::pair<int,int> point, int 
 }
 
 void algorithm::bfs(std::vector<std::vector<sf::RectangleShape>>& grid, std::pair<int,int> start, std::pair<int,int> end){
+    std::vector<std::vector<std::pair<int, int>>> prev(grid.size(), std::vector<std::pair<int, int>>(grid[0].size(), {-1, -1}));
     std::queue<std::pair<int,int>> q;
     std::set<std::pair<int,int>> visited;
     std::set<std::pair<int,int>> valid_neighbors;
+    int row;
+    int col;
     q.push({start.first,start.second});
     while(!q.empty()){
         auto current = q.front();
         q.pop();
-        int row = current.first;
-        int col = current.second;
+        row = current.first;
+        col = current.second;
         if (visited.count({row, col})) continue;
         if (grid[row][col].getFillColor() == sf::Color::Black) continue;
         visited.insert({row,col});
@@ -43,8 +46,15 @@ void algorithm::bfs(std::vector<std::vector<sf::RectangleShape>>& grid, std::pai
         for ( auto point : valid_neighbors){
             if(!visited.count(point)){
                 q.push(point);
+                prev[point.first][point.second] = {row,col};
             }
         }
     }
 
+    while(prev[row][col] != std::make_pair(start.first, start.second)){
+        std::pair<int,int> point = prev[row][col];
+        grid[point.first][point.second].setFillColor(sf::Color::Yellow);
+        row = point.first;
+        col = point.second;
+    }
 }
