@@ -8,10 +8,13 @@ public:
     void showWindow();
     void initGrid();
     void drawGrid();
+    void clearGrid(bool flag);
     void handleMouseEvent();
 private:
     int height, width;
     int cols, rows, cellSize;
+    bool algoCompleted = false;
+    bool algoRunning = false;
     algorithm algo;
     sf::RenderWindow window;
     std::vector<std::vector<sf::RectangleShape>> grid;
