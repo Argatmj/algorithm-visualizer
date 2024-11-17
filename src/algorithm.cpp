@@ -17,12 +17,10 @@ std::set<std::pair<int,int>> algorithm::neighbors(std::pair<int,int> point, int 
     return valid_neighbors;
 }
 
-bool algorithm::bfs(std::vector<std::vector<sf::RectangleShape>>& grid,
+bool algorithm::bfs(grid& grid,
                     std::vector<std::vector<std::pair<int, int>>>& prev,
                     std::queue<std::pair<int, int>>& q,
                     std::set<std::pair<int, int>>& visited,
-                    std::pair<int, int>& start, 
-                    std::pair<int, int>& end, 
                     int stepsPerFrame,
                     bool& initialized){
     if (!initialized) {
@@ -41,24 +39,21 @@ bool algorithm::bfs(std::vector<std::vector<sf::RectangleShape>>& grid,
         int col = current.second;
 
         if (visited.count({row, col})) continue;
-        if (grid[row][col].getFillColor() == sf::Color::Black) continue;
+        if (grid.getColor(current) == sf::Color::Black) continue;
         visited.insert({row, col});
 
-        if (row == end.first && col == end.second) {
-            grid[row][col].setFillColor(sf::Color::Blue);
-            reconstructPath(grid, prev, start, end);
+        if (current == end) {
+            reconstructPath(grid, prev);
             initialized = false;
             q = {};
             return true;
         }
 
-        if (row == start.first && col == start.second) {
-            grid[row][col].setFillColor(sf::Color::Green);
-        } else {
-            grid[row][col].setFillColor(sf::Color::Red);
+        if(current != start){
+            grid.setColor(current,sf::Color::Red);
         }
 
-        auto valid_neighbors = neighbors({row, col}, grid.size(), grid[0].size());
+        auto valid_neighbors = neighbors({row, col}, grid.getSize(), grid.getCols());
         for (auto point : valid_neighbors) {
             if (!visited.count(point)) {
                 q.push(point);
@@ -69,16 +64,23 @@ bool algorithm::bfs(std::vector<std::vector<sf::RectangleShape>>& grid,
     return false;
 }
 
-void algorithm::reconstructPath(std::vector<std::vector<sf::RectangleShape>>& grid, 
-                                const std::vector<std::vector<std::pair<int, int>>>& prev, 
-                                std::pair<int, int> start, 
-                                std::pair<int, int> end) {
+void algorithm::setStart(std::pair<int, int> coords)
+{
+    start = coords;
+}
+
+void algorithm::setFinish(std::pair<int, int> coords)
+{
+    end = coords;
+}
+
+void algorithm::reconstructPath(grid& grid, const std::vector<std::vector<std::pair<int, int>>>& prev) {
     int row = end.first;
     int col = end.second;
 
     while (prev[row][col] != std::make_pair(start.first, start.second)) {
         std::pair<int, int> point = prev[row][col];
-        grid[point.first][point.second].setFillColor(sf::Color::Yellow);
+        grid.setColor(point, sf::Color::Yellow);
         row = point.first;
         col = point.second;
     }

@@ -3,22 +3,17 @@
 view::view():
 window(sf::VideoMode(width, height), "Algo-viz"),
 height(800),
-width(1000),
-cellSize(20),
-rows(height/20),
-cols(800/20)
+width(1000)
 {
-    grid.resize(rows, std::vector<sf::RectangleShape>(cols));
-    initGrid();
 }
 
 
 void view::showWindow(){
-    std::vector<std::vector<std::pair<int, int>>> prev(grid.size(), std::vector<std::pair<int, int>>(grid[0].size(), {-1, -1}));
+    std::vector<std::vector<std::pair<int, int>>> prev(_grid.getGrid().size(), std::vector<std::pair<int, int>>(_grid.getGrid()[0].size(), {-1, -1}));
     std::queue<std::pair<int, int>> q;
     std::set<std::pair<int, int>> visited;
     bool initialized = false;
-    std::pair start{1,1} , end{30,30};
+    std::pair prevStart{0,0}, prevFinish{0,0};
     
     while (window.isOpen())
     {
@@ -28,7 +23,7 @@ void view::showWindow(){
             if (event.type == sf::Event::Closed)
                 window.close();
             if(event.type == sf::Event::MouseMoved || event.type == sf::Event::MouseButtonPressed){
-                handleMouseEvent();
+                handleMouseEvent(prevStart, prevFinish);
             }
             if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::B) {
@@ -36,79 +31,62 @@ void view::showWindow(){
                     algoCompleted = false;
                 }
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::C)){
-                    clearGrid(false);
+                    _grid.resetGrid(false, algoCompleted, algoRunning);
                     initialized = false;
                     visited.clear();
-                    prev.assign(grid.size(), std::vector<std::pair<int, int>>(grid[0].size(), {-1, -1}));
+                    prev.assign(_grid.getSize(), std::vector<std::pair<int, int>>(_grid.getCols(), {-1, -1}));
                     while (!q.empty()) q.pop();
                 }
             }
         }
 
         if (algoRunning && !algoCompleted) {
-           algoCompleted = algo.bfs(grid, prev, q, visited, start, end, 4, initialized);
+           algoCompleted = algo.bfs(_grid, prev, q, visited, 4, initialized);
             if (algoCompleted) {
                 algoRunning = false; 
             }
         }
 
         window.clear(sf::Color::White);
-        drawGrid();
+        _grid.drawGrid(window);
         window.display();
     }
 }
 
-void view::handleMouseEvent(){
+void view::handleMouseEvent(std::pair<int,int>& prevStart, std::pair<int,int>& prevFinish){
     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+    
+    int cellSize = _grid.getCellSize();
+    int cols = _grid.getCols();
+    int rows = _grid.getRows();
 
     int gridX = mousePos.x / cellSize;
     int gridY = mousePos.y / cellSize;
 
+    std::pair<int,int> coords = {gridY,gridX};
+
     if (gridX >= 0 && gridX < cols && gridY >= 0 && gridY < rows) {
         if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-            grid[gridY][gridX].setFillColor(sf::Color::Black);  
+           _grid.setColor(coords,sf::Color::Black);
         }
         if(sf::Mouse::isButtonPressed(sf::Mouse::Right)){
-            grid[gridY][gridX].setFillColor(sf::Color::White);  
+           _grid.setColor(coords,sf::Color::White);
         }
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
-            grid[gridY][gridX].setFillColor(sf::Color::Green);  
+            if(std::make_pair(gridY,gridX) != prevStart){
+                _grid.setColor(prevStart,sf::Color::White);
+            }
+            _grid.setColor(coords,sf::Color::Green);  
+            prevStart = {gridY,gridX};
+            algo.setStart(prevStart);
          }
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::F)){
-            grid[gridY][gridX].setFillColor(sf::Color::Red);  
+            if(std::make_pair(gridY,gridX) != prevFinish ){
+               _grid.setColor(prevFinish,sf::Color::White);
+            }
+            _grid.setColor(coords,sf::Color::Blue);  
+            prevFinish = {gridY,gridX};
+           algo.setFinish(prevFinish);
         }
     }
-}
-
-void view::drawGrid(){
-        for(int i = 0; i < rows; i++){
-            for(int j = 0 ;j < cols; j++){
-                window.draw(grid[i][j]);
-            }
-        }
-}
-
-void view::initGrid(){
-    for(int y = 0; y < rows; y++){
-        for( int x = 0; x < cols ; x++){
-                grid[y][x].setSize(sf::Vector2f(cellSize, cellSize));
-                grid[y][x].setPosition(x * cellSize, y * cellSize);
-                grid[y][x].setFillColor(sf::Color::White); 
-                grid[y][x].setOutlineThickness(1);
-                grid[y][x].setOutlineColor(sf::Color::Black);
-        }
-    }
-}
-
-void view::clearGrid(bool flag){
-    algoCompleted = false;
-    algoRunning = false;
-    for(int i = 0; i < rows; i++){
-            for(int j = 0 ;j < cols; j++){
-                if(grid[i][j].getFillColor() == sf::Color::Black && !flag){
-                    continue;
-                }
-                grid[i][j].setFillColor(sf::Color::White);
-            }
-        }
 }

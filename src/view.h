@@ -6,16 +6,12 @@ class view{
 public:
     view();
     void showWindow();
-    void initGrid();
-    void drawGrid();
-    void clearGrid(bool flag);
-    void handleMouseEvent();
+    void handleMouseEvent(std::pair<int,int>& prevStart, std::pair<int,int>& prevFinish);
 private:
     int height, width;
-    int cols, rows, cellSize;
     bool algoCompleted = false;
     bool algoRunning = false;
     algorithm algo;
     sf::RenderWindow window;
-    std::vector<std::vector<sf::RectangleShape>> grid;
+    grid _grid;
 };
