@@ -12,7 +12,7 @@ public:
     void setColor(std::pair<int,int> coords, sf::Color color);
     int getCellSize();
     void drawGrid(sf::RenderWindow& window);
-    void resetGrid(bool flag, bool& algoCompleted, bool& algoRunning);
+    void resetGrid(bool flag);
     std::vector<std::vector<sf::RectangleShape>>& getGrid();
 
 

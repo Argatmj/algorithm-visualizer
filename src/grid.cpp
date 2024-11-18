@@ -57,9 +57,7 @@ void grid::drawGrid(sf::RenderWindow& window){
         }
 }
 
-void grid::resetGrid(bool flag, bool& algoCompleted, bool& algoRunning){
-    algoCompleted = false;
-    algoRunning = false;
+void grid::resetGrid(bool flag){
     for(int i = 0; i < rows; i++){
         for(int j = 0 ;j < cols; j++){
             if(_grid[i][j].getFillColor() == sf::Color::Black && !flag){
