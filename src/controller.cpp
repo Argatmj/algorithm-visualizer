@@ -35,8 +35,17 @@ void controller::drawGrid(sf::RenderWindow& window){
     _grid.drawGrid(window);
 }
 
-bool controller::runAlgo(){
-    return algo.bfs(_grid, prev, q, visited, 4, initialized);
+bool controller::runAlgo(int num){
+    bool result;
+    switch(num){
+        case 1:
+            result = algo.bfs(_grid, prev, q, visited, 1, initialized);
+        case 2:
+            result = algo.gbfs(_grid, prev, priorityQ, visited, 1, initialized);
+    }
+
+    return result;
+
 }
 
 void controller::handleMouseEvent(sf::RenderWindow& window){
@@ -70,7 +79,7 @@ void controller::handleMouseEvent(sf::RenderWindow& window){
             if(std::make_pair(gridY,gridX) != prevFinish ){
                _grid.setColor(prevFinish,sf::Color::White);
             }
-            _grid.setColor(coords,sf::Color::Blue);  
+            _grid.setColor(coords,sf::Color::Red);  
             prevFinish = {gridY,gridX};
            algo.setFinish(prevFinish);
         }

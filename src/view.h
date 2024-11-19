@@ -10,4 +10,5 @@ private:
     int height, width;
     sf::RenderWindow window;
     controller control;
+    int num;
 };

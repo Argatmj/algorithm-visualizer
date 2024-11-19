@@ -9,7 +9,6 @@ control()
 }
 
 void view::showWindow(){
-    int ticks = 0; // Track game loop ticks
     while (window.isOpen())
     {
         sf::Event event;
@@ -22,7 +21,14 @@ void view::showWindow(){
             }
             if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::B) {
-                  control.algoInit();
+                    control.algoInit();
+                    num = 1;
+
+                }
+                if (event.key.code == sf::Keyboard::G) {
+                    control.algoInit();
+                    num = 2;
+
                 }
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::C)){
                     control.clearGrid();
@@ -32,7 +38,7 @@ void view::showWindow(){
 
 
         if (control.getAlgoRunning() && !control.getAlgoCompleted()) {
-            control.runAlgo();
+            control.runAlgo(num);
             if (control.getAlgoCompleted()) {
                 control.setAlgoRunning(false);
             }

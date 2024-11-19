@@ -61,7 +61,7 @@ void grid::resetGrid(bool flag){
     for(int i = 0; i < rows; i++){
         for(int j = 0 ;j < cols; j++){
             std::pair<int,int> p {i,j};
-            if((getColor(p) == sf::Color::Black || getColor(p) == sf::Color::Blue || getColor(p) == sf::Color::Green) && !flag){
+            if((getColor(p) == sf::Color::Black || getColor(p) == sf::Color::Red || getColor(p) == sf::Color::Green) && !flag){
                 continue;
             }
             setColor(std::make_pair(i,j), sf::Color::White);
