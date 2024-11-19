@@ -9,6 +9,7 @@ control()
 }
 
 void view::showWindow(){
+    int ticks = 0; // Track game loop ticks
     while (window.isOpen())
     {
         sf::Event event;
@@ -29,12 +30,14 @@ void view::showWindow(){
             }
         }
 
+
         if (control.getAlgoRunning() && !control.getAlgoCompleted()) {
             control.runAlgo();
             if (control.getAlgoCompleted()) {
-                control.setAlgoRunning(false); 
+                control.setAlgoRunning(false);
             }
         }
+
 
         window.clear(sf::Color::White);
         control.drawGrid(window);

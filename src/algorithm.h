@@ -4,9 +4,13 @@
 #include "grid.h"
 #include <queue>
 #include <set>
+#include <cmath>
+#include "sound.h"
+#include <algorithm>
 
 class algorithm {
 public:
+    algorithm();
     bool bfs(grid& grid,
             std::vector<std::vector<std::pair<int, int>>>& prev,
             std::queue<std::pair<int, int>>& q,
@@ -15,12 +19,13 @@ public:
             bool& initialized);
     void setStart(std::pair<int,int> coords);
     void setFinish(std::pair<int,int> coords);
+    float calculateDistance(const std::pair<int, int>& point1, const std::pair<int, int>& point2);
 
 private:
     std::set<std::pair<int,int>> neighbors(std::pair<int,int> point, int size, int len);
     void reconstructPath(grid& grid, const std::vector<std::vector<std::pair<int, int>>>& prev);
     bool isValid(std::pair<int,int> coords, int size, int len);
-
     std::pair<int, int> start, end;
+    audio beep;
 
 };

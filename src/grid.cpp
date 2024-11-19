@@ -60,10 +60,11 @@ void grid::drawGrid(sf::RenderWindow& window){
 void grid::resetGrid(bool flag){
     for(int i = 0; i < rows; i++){
         for(int j = 0 ;j < cols; j++){
-            if(_grid[i][j].getFillColor() == sf::Color::Black && !flag){
+            std::pair<int,int> p {i,j};
+            if((getColor(p) == sf::Color::Black || getColor(p) == sf::Color::Blue || getColor(p) == sf::Color::Green) && !flag){
                 continue;
             }
-        setColor(std::make_pair(i,j), sf::Color::White);
+            setColor(std::make_pair(i,j), sf::Color::White);
         }
     }
 }

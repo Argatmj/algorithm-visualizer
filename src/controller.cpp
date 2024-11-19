@@ -1,7 +1,7 @@
 #include "controller.h"
 
 controller::controller(){
-   prev.resize(_grid.getRows(), std::vector<std::pair<int, int>>(_grid.getCols(), {0, 0}));
+    prev.resize(_grid.getRows(), std::vector<std::pair<int, int>>(_grid.getCols(), {0, 0}));
 }
 
 void controller::algoInit(){
@@ -35,9 +35,7 @@ void controller::drawGrid(sf::RenderWindow& window){
     _grid.drawGrid(window);
 }
 
-
 bool controller::runAlgo(){
-    
     return algo.bfs(_grid, prev, q, visited, 4, initialized);
 }
 
