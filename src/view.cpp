@@ -23,12 +23,14 @@ void view::showWindow(){
                 if (event.key.code == sf::Keyboard::B) {
                     control.algoInit();
                     num = 1;
-
                 }
                 if (event.key.code == sf::Keyboard::G) {
                     control.algoInit();
                     num = 2;
-
+                }
+                if (event.key.code == sf::Keyboard::A) {
+                    control.algoInit();
+                    num = 3;
                 }
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::C)){
                     control.clearGrid();

@@ -15,6 +15,7 @@ void controller::clearGrid(){
     algoCompleted = false;
     algoRunning = false;
     _grid.resetGrid(false);
+    algo.resetValues();
 }
 
 bool controller::getAlgoCompleted(){
@@ -45,6 +46,9 @@ bool controller::runAlgo(int num){
             break;
         case 2:
             result = algo.gbfs(_grid);
+            break;
+        case 3:
+            result = algo.astar(_grid);
             break;
     }
     return result;

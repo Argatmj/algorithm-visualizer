@@ -32,18 +32,11 @@ bool algorithm::bfs(grid& grid){
     float pathDistance = calculateDistance(start, end);
 
     for (int step = 0; step < stepsPerFrame && !q.empty(); ++step) {
-        if (q.empty()) {
-            initialized = false; 
-            return true;        
-        }
-
         auto current = q.front();
 
         if (current == end) {
-            reconstructPath(grid, prev);
-            initialized = false;
-            visited.clear();
-            q = {};
+            reconstructPath(grid);
+            resetValues();
             return true;
         }
 
@@ -95,7 +88,21 @@ void algorithm::setFinish(std::pair<int, int> coords)
     end = coords;
 }
 
-void algorithm::reconstructPath(grid& grid, const std::vector<std::vector<std::pair<int, int>>>& prev) {
+void algorithm::resetValues(){
+    initialized = false;
+    visited.clear();
+    costMap.clear();
+    q = {};
+    std::priority_queue<
+    std::pair<int, std::pair<int, int>>, 
+    std::vector<std::pair<int, std::pair<int, int>>>, 
+    std::greater<>> empty;
+    priorityQ.swap(empty);
+    std::priority_queue<Node> clear;
+    nodeQ.swap(clear);
+}
+
+void algorithm::reconstructPath(grid& grid) {
     int row = end.first;
     int col = end.second;
 
@@ -136,15 +143,8 @@ bool algorithm::gbfs(grid& grid) {
         if (grid.getColor(coords) == sf::Color::Black) continue;
 
          if (coords == end) {
-            reconstructPath(grid, prev);
-            initialized = false;
-            std::priority_queue<
-                std::pair<int, std::pair<int, int>>, 
-                std::vector<std::pair<int, std::pair<int, int>>>, 
-                std::greater<>
-            > empty;
-            priorityQ.swap(empty);
-            visited.clear();
+            reconstructPath(grid);
+            resetValues();
             return true;
         }
 
@@ -164,6 +164,60 @@ bool algorithm::gbfs(grid& grid) {
     return false;
 }
 
+bool algorithm::astar(grid &grid){
+
+    if (!initialized) {
+        Node s(start.first,start.second,0,manhattanDistance(start));
+        nodeQ.push(s);
+        costMap[start] = 0;
+        initialized = true;
+    }
+
+    float pathDistance = calculateDistance(start, end);
+
+    for (int step = 0; step < stepsPerFrame && !nodeQ.empty(); ++step) {
+        Node current = nodeQ.top();
+        nodeQ.pop();
+        std::pair<int,int> coords = {current.x,current.y};
+
+        float focusPointDistance = calculateDistance(coords, end);
+        
+        if (pathDistance > 6.0f) {
+            float ratio = focusPointDistance / pathDistance;
+            ratio = 1.0f - ratio; 
+            float pitch = 0.1f + (ratio * 7.5f);
+            beep.playAudio(pitch);
+        }
+
+        if(visited.count(coords)) continue;
+        visited.insert(coords);
+        if (grid.getColor(coords) == sf::Color::Black) continue;
+
+        if(coords == end){
+            reconstructPath(grid);
+            resetValues();
+            return true;
+        }
+
+        if (coords != start) {
+            grid.setColor(coords, sf::Color::Blue);
+        }
+
+        auto valid_neighbors = neighbors(coords, grid.getSize(), grid.getCols());
+        for(auto neighbor : valid_neighbors){
+            int g = current.g + 1;
+            if(!visited.count(neighbor) && (!costMap.count(neighbor) || g < costMap[neighbor] )){
+                costMap[neighbor] = g;
+                Node new_node(neighbor.first, neighbor.second, g, manhattanDistance(neighbor));
+                prev[neighbor.first][neighbor.second] = coords;
+                nodeQ.push(new_node);
+            }
+        }
+
+    }
+    return false;
+
+}
 
 int algorithm::manhattanDistance(std::pair<int,int> start){
     return abs(end.first - start.first) + abs(end.second - start.second);
