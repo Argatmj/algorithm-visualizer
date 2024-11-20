@@ -1,8 +1,10 @@
 #include "algorithm.h"
 #include <iostream>
+#define stepsPerFrame 1
 
-algorithm::algorithm(){
+algorithm::algorithm(grid& grid){
     beep.loadAudio();
+    prev.resize(grid.getRows(), std::vector<std::pair<int, int>>(grid.getCols(), {0, 0}));
 }
 
 bool algorithm::isValid(std::pair<int,int> coords,int size, int len){
@@ -21,12 +23,7 @@ std::set<std::pair<int,int>> algorithm::neighbors(std::pair<int,int> point, int 
     return valid_neighbors;
 }
 
-bool algorithm::bfs(grid& grid,
-                    std::vector<std::vector<std::pair<int, int>>>& prev,
-                    std::queue<std::pair<int, int>>& q,
-                    std::set<std::pair<int, int>>& visited,
-                    int stepsPerFrame,
-                    bool& initialized){
+bool algorithm::bfs(grid& grid){
     if (!initialized) {
         q.push(start);
         initialized = true;
@@ -45,6 +42,7 @@ bool algorithm::bfs(grid& grid,
         if (current == end) {
             reconstructPath(grid, prev);
             initialized = false;
+            visited.clear();
             q = {};
             return true;
         }
@@ -109,14 +107,7 @@ void algorithm::reconstructPath(grid& grid, const std::vector<std::vector<std::p
     }
 }
 
-bool algorithm::gbfs(grid& grid,
-                    std::vector<std::vector<std::pair<int, int>>>& prev,
-                    std::priority_queue<std::pair<int, std::pair<int, int>>, 
-                    std::vector<std::pair<int, std::pair<int, int>>>, 
-                    std::greater<>>& priorityQ,
-                    std::set<std::pair<int, int>>& visited,
-                    int stepsPerFrame,
-                    bool& initialized) {
+bool algorithm::gbfs(grid& grid) {
 
     if (!initialized) {
         priorityQ.push(std::make_pair(manhattanDistance(start), start));
@@ -153,6 +144,7 @@ bool algorithm::gbfs(grid& grid,
                 std::greater<>
             > empty;
             priorityQ.swap(empty);
+            visited.clear();
             return true;
         }
 

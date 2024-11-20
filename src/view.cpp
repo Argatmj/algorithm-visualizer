@@ -38,7 +38,8 @@ void view::showWindow(){
 
 
         if (control.getAlgoRunning() && !control.getAlgoCompleted()) {
-            control.runAlgo(num);
+            bool flag = control.runAlgo(num);
+            control.setAlgoCompleted(flag);
             if (control.getAlgoCompleted()) {
                 control.setAlgoRunning(false);
             }

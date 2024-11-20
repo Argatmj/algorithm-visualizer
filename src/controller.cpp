@@ -1,7 +1,9 @@
 #include "controller.h"
 
-controller::controller(){
-    prev.resize(_grid.getRows(), std::vector<std::pair<int, int>>(_grid.getCols(), {0, 0}));
+controller::controller():
+_grid(),
+algo(_grid)
+{
 }
 
 void controller::algoInit(){
@@ -13,10 +15,6 @@ void controller::clearGrid(){
     algoCompleted = false;
     algoRunning = false;
     _grid.resetGrid(false);
-    initialized = false;
-    visited.clear();
-    prev.assign(_grid.getSize(), std::vector<std::pair<int, int>>(_grid.getCols(), {-1, -1}));
-    while (!q.empty()) q.pop();
 }
 
 bool controller::getAlgoCompleted(){
@@ -31,6 +29,10 @@ void controller::setAlgoRunning(bool flag){
     algoRunning = flag;
 }
 
+void controller::setAlgoCompleted(bool flag){
+    algoCompleted = flag;
+}
+
 void controller::drawGrid(sf::RenderWindow& window){
     _grid.drawGrid(window);
 }
@@ -39,11 +41,12 @@ bool controller::runAlgo(int num){
     bool result;
     switch(num){
         case 1:
-            result = algo.bfs(_grid, prev, q, visited, 1, initialized);
+            result = algo.bfs(_grid);
+            break;
         case 2:
-            result = algo.gbfs(_grid, prev, priorityQ, visited, 1, initialized);
+            result = algo.gbfs(_grid);
+            break;
     }
-
     return result;
 
 }
