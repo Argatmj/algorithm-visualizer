@@ -5,9 +5,9 @@ window(sf::VideoMode(width, height), "Algo-viz"),
 height(800),
 width(1000),
 control(),
-bfsTimer(850,50,"BFS",font,16),
-gbfsTimer(850,100,"GBFS",font,16),
-aTimer(850,150,"A*",font,16)
+bfsTimer(850,50,"BFS",font,20,1),
+gbfsTimer(850,100,"GBFS",font,20,2),
+aTimer(850,150,"A*",font,20,3)
 {
     font.loadFromFile("src/OpenSans-Regular.ttf");
 }
@@ -76,13 +76,13 @@ void view::updateTimer(){
     
     switch(op){
         case 1: 
-            bfsTimer.update(flag);
+            bfsTimer.update(flag,op);
             break;
         case 2: 
-            gbfsTimer.update(flag);
+            gbfsTimer.update(flag,op);
             break;
         case 3: 
-            aTimer.update(flag);
+            aTimer.update(flag,op);
             break;
     }
 
