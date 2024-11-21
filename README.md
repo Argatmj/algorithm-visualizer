@@ -54,3 +54,10 @@ Once an algorithm is selected, the visualizer dynamically illustrates how it exp
 Check out the demo:
 
 [![Pathfinding Algorithm Visualizer Demo](https://img.youtube.com/vi/IgNzDYCisxY/0.jpg)](https://www.youtube.com/watch?v=IgNzDYCisxY)
+
+# Architecture
+
+This project follows the MVC architecture pattern. Below is a diagram illustrating the structure:
+
+![MVC Architecture Diagram](src/mvc.png "MVC Diagram")
+
