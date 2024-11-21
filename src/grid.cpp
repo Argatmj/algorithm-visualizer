@@ -2,7 +2,7 @@
 
 grid::grid():
 cellSize(20),
-rows(1000/20),
+rows(800/20),
 cols(800/20)
 {
     _grid.resize(rows, std::vector<sf::RectangleShape>(cols));

@@ -4,8 +4,12 @@ view::view():
 window(sf::VideoMode(width, height), "Algo-viz"),
 height(800),
 width(1000),
-control()
+control(),
+bfsTimer(850,50,"BFS",font,16),
+gbfsTimer(850,100,"GBFS",font,16),
+aTimer(850,150,"A*",font,16)
 {
+    font.loadFromFile("src/OpenSans-Regular.ttf");
 }
 
 void view::showWindow(){
@@ -22,15 +26,18 @@ void view::showWindow(){
             if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::B) {
                     control.algoInit();
-                    num = 1;
+                    op = 1;
+                    bfsTimer.restartClock();
                 }
                 if (event.key.code == sf::Keyboard::G) {
                     control.algoInit();
-                    num = 2;
+                    op = 2;
+                    gbfsTimer.restartClock();
                 }
                 if (event.key.code == sf::Keyboard::A) {
                     control.algoInit();
-                    num = 3;
+                    op = 3;
+                    aTimer.restartClock();
                 }
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::C)){
                     control.clearGrid();
@@ -38,18 +45,49 @@ void view::showWindow(){
             }
         }
 
-
         if (control.getAlgoRunning() && !control.getAlgoCompleted()) {
-            bool flag = control.runAlgo(num);
+            bool flag = control.runAlgo(op);
             control.setAlgoCompleted(flag);
             if (control.getAlgoCompleted()) {
                 control.setAlgoRunning(false);
+                switch(op){
+                    case 1:
+                        bfsTimer.finalize();
+                        break;
+                    case 2:
+                        gbfsTimer.finalize();
+                        break;
+                    case 3:
+                        aTimer.finalize();
+                        break;
+                }
             }
         }
 
-
         window.clear(sf::Color::White);
         control.drawGrid(window);
+        updateTimer();
         window.display();
     }
+}
+
+void view::updateTimer(){
+    bool flag = control.getAlgoRunning();
+    
+    switch(op){
+        case 1: 
+            bfsTimer.update(flag);
+            break;
+        case 2: 
+            gbfsTimer.update(flag);
+            break;
+        case 3: 
+            aTimer.update(flag);
+            break;
+    }
+
+    bfsTimer.draw(window);
+    gbfsTimer.draw(window);
+    aTimer.draw(window);
+
 }

@@ -1,14 +1,17 @@
 #include <SFML/Graphics.hpp>
 #include "controller.h"
-#include <vector>
+#include "timer.h"
+#include <string>
 
 class view{
 public:
     view();
     void showWindow();
-private:
-    int height, width;
+private: 
+    void updateTimer();
+    int height, width, op;
     sf::RenderWindow window;
     controller control;
-    int num;
+    sf::Font font; 
+    timer bfsTimer, gbfsTimer, aTimer;
 };

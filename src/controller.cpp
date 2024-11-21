@@ -38,9 +38,9 @@ void controller::drawGrid(sf::RenderWindow& window){
     _grid.drawGrid(window);
 }
 
-bool controller::runAlgo(int num){
+bool controller::runAlgo(int op){
     bool result;
-    switch(num){
+    switch(op){
         case 1:
             result = algo.bfs(_grid);
             break;

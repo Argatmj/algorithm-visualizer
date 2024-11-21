@@ -7,16 +7,17 @@ algorithm::algorithm(grid& grid){
     prev.resize(grid.getRows(), std::vector<std::pair<int, int>>(grid.getCols(), {0, 0}));
 }
 
-bool algorithm::isValid(std::pair<int,int> coords,int size, int len){
-    return (coords.first >= 0 && coords.second >= 0 && coords.first < size && coords.second < len);
+bool algorithm::isValid(std::pair<int,int> coords,int row, int len){
+    return (coords.first >= 0 && coords.second >= 0 && coords.first < row && coords.second < len);
 }
 
-std::set<std::pair<int,int>> algorithm::neighbors(std::pair<int,int> point, int size, int len){
+std::set<std::pair<int,int>> algorithm::neighbors(std::pair<int,int> point, int row, int len){
     std::set<std::pair<int,int>> possible_neighbors;
     std::set<std::pair<int,int>> valid_neighbors;
     possible_neighbors.insert({{point.first + 1,point.second},{point.first -1,point.second},{point.first,point.second + 1},{point.first,point.second - 1}});
+    if(!currBfs)possible_neighbors.insert({{point.first + 1,point.second + 1},{point.first + 1,point.second - 1},{point.first - 1,point.second + 1},{point.first - 1,point.second - 1}});
     for(auto point: possible_neighbors){
-        if(isValid(point,size,len)){
+        if(isValid(point,row,len)){
             valid_neighbors.insert(point);
         }
     }
@@ -27,6 +28,7 @@ bool algorithm::bfs(grid& grid){
     if (!initialized) {
         q.push(start);
         initialized = true;
+        currBfs = true;
     }
     
     float pathDistance = calculateDistance(start, end);
@@ -61,7 +63,7 @@ bool algorithm::bfs(grid& grid){
             grid.setColor(current,sf::Color::Blue);
         }
 
-        auto valid_neighbors = neighbors(current, grid.getSize(), grid.getCols());
+        auto valid_neighbors = neighbors(current, grid.getRows(), grid.getCols());
         for (auto point : valid_neighbors) {
             if (!visited.count(point)) {
                 q.push(point);
@@ -90,6 +92,7 @@ void algorithm::setFinish(std::pair<int, int> coords)
 
 void algorithm::resetValues(){
     initialized = false;
+    currBfs = false;
     visited.clear();
     costMap.clear();
     q = {};

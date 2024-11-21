@@ -17,7 +17,6 @@ public:
     void resetValues();
     void setStart(std::pair<int,int> coords);
     void setFinish(std::pair<int,int> coords);
-    float calculateDistance(const std::pair<int, int>& point1, const std::pair<int, int>& point2);
 
 private:
     struct Node{
@@ -35,12 +34,14 @@ private:
     void reconstructPath(grid& grid);
     int manhattanDistance(std::pair<int,int> start);
     bool isValid(std::pair<int,int> coords, int size, int len);
+    float calculateDistance(const std::pair<int, int>& point1, const std::pair<int, int>& point2);
 
     std::priority_queue<std::pair<int, std::pair<int, int>>, std::vector<std::pair<int, std::pair<int, int>>>, std::greater<>> priorityQ;
     std::queue<std::pair<int, int>> q;
     std::set<std::pair<int, int>> visited;
     std::vector<std::vector<std::pair<int, int>>> prev;
     bool initialized = false;
+    bool currBfs = false;
     std::pair<int, int> start, end;
     audio beep;
 
