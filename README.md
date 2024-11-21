@@ -55,7 +55,7 @@ Check out the demo:
 
 [![Pathfinding Algorithm Visualizer Demo](https://img.youtube.com/vi/IgNzDYCisxY/0.jpg)](https://www.youtube.com/watch?v=IgNzDYCisxY)
 
-# Architecture
+## Architecture
 
 This project follows the MVC architecture pattern. Below is a diagram illustrating the structure:
 
